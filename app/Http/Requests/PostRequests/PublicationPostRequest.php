@@ -4,16 +4,22 @@ namespace App\Http\Requests\PostRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePostRequest extends FormRequest
+class PublicationPostRequest extends FormRequest
 {
     public function rules()
     {
         return [
-            'name' => [
+            'title' => [
                 'required',
                 'string',
                 'min:3',
                 'max:100',
+            ],
+            'text' => [
+                'required',
+                'string',
+                'min:10',
+                'max:5000',
             ]
         ];
     }

@@ -2,39 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PostRequests\CreatePostRequest;
+use App\Http\Requests\PostRequests\PublicationPostRequest;
 use App\Http\Requests\PostRequests\GetPostsRequest;
 use App\Http\Services\PostService;
-use App\Models\Post;
+use App\Http\Traits\ApiResponseTrait;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
-    public function createPost(CreatePostRequest $request): array
+    use ApiResponseTrait;
+
+    public function publicationPost(PublicationPostRequest $request): JsonResponse
     {
-        /*
-        $service = new PostService();
-        $post = $service->createPost($request->validated());
-        return [
-            'post' => [
-                'id' => $post->id,
-                'title' => $post->title,
-            ]
-        ];*/
-        return[];
+        try {
+            $service = new PostService();
+            $result = $service->createPost($request->validated());
+            return $this->successResponse(
+                $result,
+                'Post published successfully',
+                201
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                $e->getMessage(),
+                400
+            );
+        }
     }
 
     public function getPosts(GetPostsRequest $request): JsonResponse
     {
-        $postService = new PostService();
-        $posts = $postService->getPosts();
-        return response()->json(['posts' => $posts]);
+        try {
+            $postService = new PostService();
+            $result = $postService->getPosts($request->validated());
+            return $this->successResponse(
+                $result,
+                'Get posts successfully',
+                200
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                $e->getMessage(),
+                400
+            );
+        }
     }
 
-    public function getUserPosts(GetUserPostsRequest $request): JsonResponse
+    public function getUserPosts(GetPostsRequest $request): JsonResponse
     {
-        $authorId = $request->validated()['author_Id'];
-        $posts = Post::query()->where('author_id', $authorId)->get();
-        return response()->json(['posts' => $posts]);
+        try {
+            $postService = new PostService();
+            $result = $postService->getUserPosts($request->validated());
+            return $this->successResponse(
+                $result,
+                'Get user posts successfully',
+                200
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                $e->getMessage(),
+                400
+            );
+        }
     }
 }
