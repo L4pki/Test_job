@@ -22,12 +22,12 @@ class PostService
         $userId = Auth::user()->id;
         $query = Post::query();
         $query->where('author_id', $userId);
-        return $this->extracted($data, $query);
+        return $this->getFilteredPosts($data, $query);
     }
     public function getPosts(array $data): array
     {
         $query = Post::query();
-        return $this->extracted($data, $query);
+        return $this->getFilteredPosts($data, $query);
     }
 
     /**
@@ -35,17 +35,17 @@ class PostService
      * @param \Illuminate\Database\Eloquent\Builder|Post $query
      * @return array
      */
-    public function extracted(array $data, \Illuminate\Database\Eloquent\Builder|Post $query): array
+    public function getFilteredPosts(array $data, \Illuminate\Database\Eloquent\Builder|Post $query): array
     {
         $limit = $data['limit'] ?? 10;
         $offset = $data['offset'] ?? 0;
         $sortBy = $data['sortBy'] ?? 'date';
         $sortOrder = $data['sortOrder'] ?? 'desc';
-        if(!empty($data['date_form'])){
-            $query->whereDate('created_at', '>=', $data['date_from']);
+        if(!empty($data['dateFrom'])){
+            $query->whereDate('created_at', '>=', $data['dateFrom']);
         }
-        if(!empty($data['date_to'])){
-            $query->whereDate('created_at', '<=', $data['date_from']);
+        if(!empty($data['dateTo'])){
+            $query->whereDate('created_at', '<=', $data['dateTo']);
         }
         if ($sortBy === 'date') {
             $query->orderBy('created_at', $sortOrder);
@@ -68,7 +68,7 @@ class PostService
                 'offset' => $offset,
                 'limit' => $limit,
                 'returned' => $posts->count(),
-                'has_more' => $posts->count() > $limit,
+                'has_more' => $total > ($offset + $limit),
             ]
         ];
     }

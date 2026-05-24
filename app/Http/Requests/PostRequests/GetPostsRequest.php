@@ -31,13 +31,13 @@ class GetPostsRequest extends FormRequest
                  'in:asc,desc',
                  'required_with:sortBy',
              ],
-             'date_from' => [
+             'dateFrom' => [
                  'nullable',
                  'date',
                  'date_format:Y-m-d',
                  'before_or_equal:date_to',
              ],
-             'date_to' => [
+             'dateTo' => [
                  'nullable',
                  'date',
                  'date_format:Y-m-d',
