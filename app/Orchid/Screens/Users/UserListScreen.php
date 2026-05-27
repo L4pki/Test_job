@@ -7,8 +7,10 @@ use App\Models\User;
 use App\Orchid\Layouts\Users\UserListTable;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Dashboard;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -22,7 +24,7 @@ class UserListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'users' => User::paginate(5),
+            'users' => User::paginate(10),
         ];
     }
 
@@ -79,6 +81,10 @@ class UserListScreen extends Screen
                         ->set('maxlength', '20')
                         ->help('от 5, до 20!')
                         ->required(),
+                    CheckBox::make('user.is_admin')
+                        ->title('Администратор')
+                        ->sendTrueOrFalse()
+                        ->help('Отметьте, чтобы дать права администратора'),
                 ])
             ])->title('Создание пользователя')
                 ->applyButton('Сохранить')
@@ -118,7 +124,22 @@ class UserListScreen extends Screen
     {
         $validated = $request->validated();
         $userData = $validated['user'] ?? $validated;
+        $existingUser = User::query()->where('email', $userData['email'])->exists();
+        if ($existingUser) {
+            Toast::error('❌ Пользователь с таким email уже существует!');
+            return;
+        }
         $userData['password'] = bcrypt($userData['password']);
+        if (isset($validated['is_admin']) && $validated['is_admin']) {
+            $userData['permissions'] = [
+                'platform.index' => true,
+                'platform.systems.users' => true,
+                'platform.systems.attachment' => true,
+            ];
+        } else {
+            $userData['permissions'] = null;
+        }
+        unset($userData['is_admin']);
         User::query()->create($userData);
         Toast::info('Пользователь успешно создан!');
     }

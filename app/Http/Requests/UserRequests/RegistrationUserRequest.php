@@ -33,7 +33,11 @@ class RegistrationUserRequest extends FormRequest
                 'string',
                 'min:5',
                 'max:20',
-            ]
+            ],
+            'is_admin' => [
+                'sometimes',
+                'nullable',
+            ],
         ];
     }
 }

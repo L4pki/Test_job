@@ -6,7 +6,6 @@ use App\Http\Requests\PostRequests\PublicationPostRequest;
 use App\Models\Post;
 use App\Orchid\Layouts\Posts\PostListTable;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
@@ -23,7 +22,7 @@ class PostListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'posts' => Post::paginate(5),
+            'posts' => Post::paginate(10),
         ];
     }
 
