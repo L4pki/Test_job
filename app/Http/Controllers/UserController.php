@@ -79,7 +79,6 @@ class UserController extends Controller
                 400
             );
         }
-
     }
     /**
      * @throws Exception
@@ -115,13 +114,11 @@ class UserController extends Controller
         try {
             $userService = new UserService();
             $result = $userService->loginUser($request->validated());
-
             return $this->successResponse(
                 $result,
                 'Login successful',
                 200
             );
-
         } catch (Exception $e) {
             return $this->errorResponse(
                 $e->getMessage(),
@@ -172,13 +169,11 @@ class UserController extends Controller
         try {
             $userService = new UserService();
             $result = $userService->refreshTokenUser();
-
             return $this->successResponse(
                 $result,
                 'Tokens refreshed successfully',
                 200
             );
-
         } catch (Exception $e) {
             return $this->errorResponse(
                 $e->getMessage(),

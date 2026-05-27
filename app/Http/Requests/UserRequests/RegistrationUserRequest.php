@@ -6,6 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegistrationUserRequest extends FormRequest
 {
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('user')) {
+            $this->merge($this->input('user'));
+        }
+    }
+
     public function rules()
     {
         return [
@@ -26,7 +34,6 @@ class RegistrationUserRequest extends FormRequest
                 'min:5',
                 'max:20',
             ]
-
         ];
     }
 }

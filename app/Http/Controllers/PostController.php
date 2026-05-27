@@ -74,6 +74,7 @@ class PostController extends Controller
             );
         }
     }
+
     #[OA\Get(
         path: "/api/post/get/all",
         summary: "Get all posts with pagination and filters",
@@ -167,6 +168,7 @@ class PostController extends Controller
             );
         }
     }
+
     #[OA\Get(
         path: "/api/post/get/user",
         summary: "Get user posts with pagination and filters",

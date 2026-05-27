@@ -23,7 +23,7 @@ class UserService
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->password = $data['password'];
-        $user->is_admin = 0;
+        $user->save();
         return $this->tokenUpdate($user);
     }
 
@@ -40,6 +40,7 @@ class UserService
         if(!Hash::check($data['password'], $user->password)){
             throw new Exception('Wrong password');
         }
+        $user->save();
         return $this->tokenUpdate($user);
     }
 
@@ -59,6 +60,7 @@ class UserService
         $personalAccessToken->delete();
         $personalRefreshToken->delete();
         $user = Auth::user();
+        $user->save();
         return $this->tokenUpdate($user);
     }
 
@@ -68,7 +70,6 @@ class UserService
      */
     public function tokenUpdate(User $user): array
     {
-        $user->save();
         $tokenConnection = new TokenConnection();
         $accessToken = $user->createToken('access_token', ['*'], now()->addDay());
         $refreshToken = $user->createToken('refresh_token', ['*'], now()->addWeek());

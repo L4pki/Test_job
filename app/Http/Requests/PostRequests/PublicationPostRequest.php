@@ -6,6 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PublicationPostRequest extends FormRequest
 {
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('post')) {
+            $this->merge($this->input('post'));
+        }
+    }
+
     public function rules()
     {
         return [
