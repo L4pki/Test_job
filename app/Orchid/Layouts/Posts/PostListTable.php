@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\Posts;
 
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -29,7 +30,11 @@ class PostListTable extends Table
         return [
             TD::make('id', 'ID')->defaultHidden(),
             TD::make('title', 'Title'),
-            TD::make('text', 'Text'),
+            TD::make('text', 'Text')
+                ->render(function (Post $post) {
+                    $shortText = Str::limit($post->text, 50);
+                    $fullText = htmlspecialchars($post->text);
+                    return "<span title='{$fullText}' style='cursor: help;'>{$shortText}</span>";}),
             TD::make('author_id', 'ID Author'),
             TD::make('actions', 'Действия')
             ->render(function (Post $post) {
