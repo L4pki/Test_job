@@ -6,11 +6,11 @@ use App\Http\Requests\UserRequests\RegistrationUserRequest;
 use App\Models\User;
 use App\Orchid\Layouts\Users\UserListTable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
-use Orchid\Support\Facades\Dashboard;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -178,8 +178,13 @@ class UserListScreen extends Screen
     {
         $userId = $request->query('user');
         $user = User::query()->find($userId);
+        $authUser = Auth::user();
         if (!$user) {
             Toast::error('Пользователь не найден');
+            return;
+        }
+        if ($authUser->id === (int)$userId) {
+            Toast::error('Нельзя удалить авторизованного пользователя!');
             return;
         }
         $user->delete();

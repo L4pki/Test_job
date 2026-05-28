@@ -60,7 +60,7 @@ class UserService
         $personalAccessToken->delete();
         $personalRefreshToken->delete();
         $user = Auth::user();
-        $user->save();
+
         return $this->tokenUpdate($user);
     }
 

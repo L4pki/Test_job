@@ -65,9 +65,6 @@ class PostService
             ]),
             'meta' => [
                 'total' => $total,
-                'offset' => $offset,
-                'limit' => $limit,
-                'returned' => $posts->count(),
                 'has_more' => $total > ($offset + $limit),
             ]
         ];
